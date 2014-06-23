@@ -10,30 +10,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.camunda.demo.orderprocess;
+package org.camunda.demo.test;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.camunda.bpm.engine.delegate.DelegateExecution;
+import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 /**
  * @author Daniel Meyer
  *
  */
-public class ProcessOrderProvider {
+public class SendMessageMock implements JavaDelegate {
 
-  @PersistenceContext
-  private EntityManager entityManager;
+  public static List<String> waitingExecutions = new ArrayList<String>();
 
-  @Inject
-  private OrderProcessDataAccessor dataAccessor;
-
-  @Produces
-  @Named("processOrder")
-  public OrderEntity provideProcessOrder() {
-    return entityManager.find(OrderEntity.class, dataAccessor.getOrderId());
+  public void execute(DelegateExecution arg0) throws Exception {
+    waitingExecutions.add(arg0.getId());
   }
 
 }
